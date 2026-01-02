@@ -79,11 +79,19 @@ steps:
 #     command: 'test'
 #     projects: '$(functionalTests)'
 #     arguments: '--configuration $(buildConfiguration)'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Run Functional Tests'
+#   inputs:
+#     command: 'custom'
+#     custom: 'test'
+#     # We remove --report-trx if the project doesn't have the TRX extension enabled, 
+#     # or ensure it's passed correctly via the new CLI:
+#     arguments: '$(functionalTests) --configuration $(buildConfiguration) --results-directory $(Agent.TempDirectory)'
+
 - task: DotNetCoreCLI@2
   displayName: 'Run Functional Tests'
   inputs:
-    command: 'custom'
-    custom: 'test'
-    # We remove --report-trx if the project doesn't have the TRX extension enabled, 
-    # or ensure it's passed correctly via the new CLI:
-    arguments: '$(functionalTests) --configuration $(buildConfiguration) --results-directory $(Agent.TempDirectory)'
+    command: 'test'
+    arguments: '--project $(functionalTests) --configuration $(buildConfiguration) -- --report-trx'
+    # This setting is important to capture the results in Azure DevOps
+    publishTestResults: true
