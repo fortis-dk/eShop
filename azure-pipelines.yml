@@ -51,7 +51,7 @@ steps:
 - task: UseDotNet@2
   displayName: 'Install .NET SDK'
   inputs:
-    version: '8.x' # Use the version matching your fork (eShop currently uses .NET 8/9)
+    version: '10.x' # Use the version matching your fork (eShop currently uses .NET 8/9)
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore Dependencies'
