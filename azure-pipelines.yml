@@ -1,0 +1,81 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+  branches:
+    include: 
+        - '*'
+#      - main
+  # paths:
+  #   include:
+  #     - src/Ordering.API/*
+  #     - tests/Ordering.UnitTests/*
+  #     - tests/Ordering.FunctionalTests/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# variables:
+#   solution: '**/*.sln'
+#   buildPlatform: 'Any CPU'
+#   buildConfiguration: 'Release'
+
+variables:
+  buildConfiguration: 'Release'
+  # Path to the specific Ordering solution or project
+  orderingProject: 'src/Ordering.API/Ordering.API.csproj'
+  unitTests: 'tests/Ordering.UnitTests/Ordering.UnitTests.csproj'
+  functionalTests: 'tests/Ordering.FunctionalTests/Ordering.FunctionalTests.csproj'
+
+# steps:
+# - task: NuGetToolInstaller@1
+
+# - task: NuGetCommand@2
+#   inputs:
+#     restoreSolution: '$(solution)'
+
+# - task: VSBuild@1
+#   inputs:
+#     solution: '$(solution)'
+#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+
+# - task: VSTest@2
+#   inputs:
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET SDK'
+  inputs:
+    version: '8.x' # Use the version matching your fork (eShop currently uses .NET 8/9)
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore Dependencies'
+  inputs:
+    command: 'restore'
+    projects: '$(orderingProject)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Ordering Project'
+  inputs:
+    command: 'build'
+    projects: '$(orderingProject)'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run Unit Tests'
+  inputs:
+    command: 'test'
+    projects: '$(unitTests)'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run Functional Tests'
+  inputs:
+    command: 'test'
+    projects: '$(functionalTests)'
+    arguments: '--configuration $(buildConfiguration)'
