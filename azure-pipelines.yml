@@ -103,3 +103,11 @@ steps:
     custom: 'test'
     # By using 'custom', the task won't inject its own --report-trx flags
     arguments: '--project $(functionalTests) --configuration $(buildConfiguration) -- --report-xunit-trx'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results'
+  inputs:
+    testResultsFormat: 'VSTest'
+    # The new runner usually puts results in a 'TestResults' folder in your project directory
+    testResultsFiles: '**/TestResults/*.trx'
+  condition: succeededOrFailed()
