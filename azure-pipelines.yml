@@ -8,11 +8,11 @@ trigger:
     include: 
         - '*'
 #      - main
-  # paths:
-  #   include:
-  #     - src/Ordering.API/*
-  #     - tests/Ordering.UnitTests/*
-  #     - tests/Ordering.FunctionalTests/*
+  paths:
+    include:
+      - src/Ordering.API/*
+      - tests/Ordering.UnitTests/*
+      - tests/Ordering.FunctionalTests/*
 
 pool:
   vmImage: 'ubuntu-latest'
